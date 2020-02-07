@@ -19,23 +19,20 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/contact" [routerLinkActive]="['active']">Contact</a>
         </li>
-        <li class="nav-item" *ngIf="currentlyAuthenticatedUser">
-          <a class="nav-link" routerLink="/users/:currentlyAuthenticatedUser.uid" [routerLinkActive]="['active']">{{ currentlyAuthenticatedUser.email }}</a>
+        <li class="nav-item dropdown" *ngIf="user">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user-circle" style="font-size: x-large"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Profile</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="authService.logout()">Log Out</a>
+          </div>
         </li>
-        <li class="nav-item" *ngIf="currentlyAuthenticatedUser then logout else login"></li>
-        <!-- login button -->
-        <ng-template #login>
-          <li class="nav-item">
-            <button class="btn btn-outline-light" type="button" routerLink="/login">Login / Join</button>
-          </li>
-        </ng-template>
-
-        <!-- logout button -->
-        <ng-template #logout>
-          <li class="nav-item">
-            <button class="btn btn-outline-light" type="button" (click)="authService.logout()">Logout</button>
-          </li>
-        </ng-template>
+        <li class="nav-item" *ngIf="!user">
+          <button class="btn btn-outline-light" type="button" routerLink="/login">Login / Join</button>
+        </li>
       </ul>
     </div>
   </div>

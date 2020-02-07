@@ -30,7 +30,7 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent},
   { path: 'verify-email-address', component: VerifyEmailComponent},
   { path: 'users', component: UsersComponent, canActivate: [AuthGuard]},
-  { path: 'users/:id', component: ViewUserComponent, canActivate: [AuthGuard]},
+  { path: 'users/:id', component: ViewUserComponent},
   { path: 'users/edit/:id', component: EditUserComponent, canActivate: [AuthGuard]},
 ];
 

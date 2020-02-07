@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {User} from "../User";
+import {AuthService} from "../../shared/services/auth.service";
 
 @Component({
   selector: 'app-view-user',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewUserComponent implements OnInit {
 
-  constructor() { }
+
+  constructor(public authService: AuthService) { }
 
   ngOnInit() {
+
   }
 
 }

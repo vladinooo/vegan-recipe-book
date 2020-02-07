@@ -10,15 +10,11 @@ import {User} from "../user/User";
 })
 export class HomeComponent implements OnInit {
 
-  currentlyAuthenticatedUser: User;
 
   constructor(public authService: AuthService) { }
 
   ngOnInit() {
-    this.authService.getCurrentlyAuthenticatedUser()
-      .subscribe(user => {
-        this.currentlyAuthenticatedUser = user;
-      });
+
   }
 
 }

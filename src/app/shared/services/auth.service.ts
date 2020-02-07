@@ -3,9 +3,8 @@ import {User} from "../../user/User";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/firestore';
 import {Router} from "@angular/router";
-import {BehaviorSubject, Observable, of} from "rxjs";
-import {switchMap} from "rxjs/operators";
-import { auth } from 'firebase/app';
+import {BehaviorSubject} from "rxjs";
+import {auth} from 'firebase/app';
 import * as firebase from "firebase";
 
 @Injectable({
@@ -14,7 +13,9 @@ import * as firebase from "firebase";
 
 export class AuthService {
 
-  currentlyAuthenticatedUser$: Observable<User>;
+  private user = new BehaviorSubject<User>(null);
+  user$ = this.user.asObservable();
+
   private eventAuthError = new BehaviorSubject<string>('');
   eventAuthError$ = this.eventAuthError.asObservable();
 
@@ -23,31 +24,23 @@ export class AuthService {
     public angularFireAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router
   ) {
-    this.currentlyAuthenticatedUser$ = this.setCurrentlyAuthenticatedUser();
+    this.setCurrentlyAuthenticatedUser();
   }
 
   /**
-   * Set currently authenticated user.
+   * Set currently authenticated user's ID and persist it in  the local storage.
    */
-  setCurrentlyAuthenticatedUser(): Observable<User> {
-    return this.angularFireAuth.authState.pipe(
-      switchMap(user => {
+  setCurrentlyAuthenticatedUser() {
+    this.angularFireAuth.authState.subscribe(user => {
         // Logged in
         if (user) {
-          return this.angularFirestore.doc<User>(`users/${user.uid}`).valueChanges();
+          this.user.next(<User> {uid: user.uid});
+          localStorage.setItem('uid', JSON.stringify(user.uid));
         } else {
-          // Logged out
-          return of(null);
+          localStorage.setItem('uid', null);
         }
-      })
+      }
     );
-  }
-
-  /**
-   * Get currently authenticated user.
-   */
-  getCurrentlyAuthenticatedUser(): Observable<User> {
-    return this.currentlyAuthenticatedUser$;
   }
 
   /**
@@ -66,6 +59,18 @@ export class AuthService {
   }
 
   /**
+   * Gets authenticated user's ID from the local storage and sets the user.
+   */
+  retrieveUserFromLocalStorage() {
+    const userId = JSON.parse(localStorage.getItem('uid'));
+    if (!userId) {
+      return;
+    } else {
+      this.user.next(<User>{uid: userId});
+    }
+  }
+
+  /**
    * Create user with email and password.
    * @param email
    * @param password
@@ -73,10 +78,6 @@ export class AuthService {
   createUser(email, password) {
     this.angularFireAuth.auth.createUserWithEmailAndPassword(email, password)
       .then(userCredential => {
-        userCredential.user.updateProfile({
-          displayName: email
-        });
-
         this.insertUserData(userCredential.user)
           .then(() => {
             this.router.navigate(['/home']);
@@ -151,6 +152,8 @@ export class AuthService {
       .catch((error) => {
         window.alert(error);
       }).then(() => {
+        this.user.next(null);
+        localStorage.removeItem('uid');
         this.router.navigate(['/home']);
     });
   }
