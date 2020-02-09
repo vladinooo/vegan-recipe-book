@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
-import {User} from "../../user/User";
+import {Profile} from "../../profile/profile.model";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/firestore';
 import {Router} from "@angular/router";
 import {BehaviorSubject} from "rxjs";
 import {auth} from 'firebase/app';
 import * as firebase from "firebase";
+import {NgForm} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ import * as firebase from "firebase";
 
 export class AuthService {
 
-  private user = new BehaviorSubject<User>(null);
-  user$ = this.user.asObservable();
+  private authenticatedUserId = new BehaviorSubject<string>(null);
+  authenticatedUserId$ = this.authenticatedUserId.asObservable();
 
   private eventAuthError = new BehaviorSubject<string>('');
   eventAuthError$ = this.eventAuthError.asObservable();
@@ -24,20 +25,19 @@ export class AuthService {
     public angularFireAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router
   ) {
-    this.setCurrentlyAuthenticatedUser();
+    this.setCurrentlyAuthenticatedUserId();
   }
 
   /**
-   * Set currently authenticated user's ID and persist it in  the local storage.
+   * Set currently authenticated user ID and persist it in the local storage.
    */
-  setCurrentlyAuthenticatedUser() {
-    this.angularFireAuth.authState.subscribe(user => {
-        // Logged in
-        if (user) {
-          this.user.next(<User> {uid: user.uid});
-          localStorage.setItem('uid', JSON.stringify(user.uid));
+  setCurrentlyAuthenticatedUserId() {
+    this.angularFireAuth.authState.subscribe(firebaseUser => {
+        if (firebaseUser) {
+          this.authenticatedUserId.next(firebaseUser.uid);
+          localStorage.setItem('firebaseUserUID', JSON.stringify(firebaseUser.uid));
         } else {
-          localStorage.setItem('uid', null);
+          localStorage.setItem('firebaseUserUID', null);
         }
       }
     );
@@ -50,37 +50,48 @@ export class AuthService {
    */
   login(email, password) {
     this.angularFireAuth.auth.signInWithEmailAndPassword(email, password)
-      .catch(error => {
-        this.eventAuthError.next(error);
-      })
       .then(() => {
         this.router.navigate(['/home']);
+      })
+      .catch(error => {
+        this.eventAuthError.next(error);
       });
   }
 
   /**
-   * Gets authenticated user's ID from the local storage and sets the user.
+   * Gets authenticated user's ID from the local storage.
    */
-  retrieveUserFromLocalStorage() {
-    const userId = JSON.parse(localStorage.getItem('uid'));
-    if (!userId) {
+  retrieveAuthenticatedUserIdFromLocalStorage() {
+    const authenticatedUserId = JSON.parse(localStorage.getItem('firebaseUserUID'));
+    if (!authenticatedUserId) {
       return;
     } else {
-      this.user.next(<User>{uid: userId});
+      this.authenticatedUserId.next(authenticatedUserId);
     }
   }
 
   /**
-   * Create user with email and password.
+   * Create user with email and password in Firebase and store the profile details in Cloud Firestore.
    * @param email
    * @param password
    */
   createUser(email, password) {
     this.angularFireAuth.auth.createUserWithEmailAndPassword(email, password)
       .then(userCredential => {
-        this.insertUserData(userCredential.user)
+        // create new profile document with ID matching the user UID
+        this.angularFirestore.collection("profiles").doc(userCredential.user.uid).set({
+          uid: userCredential.user.uid,
+          email: userCredential.user.email,
+          name: '',
+          photoURL: '',
+          bio: '',
+          emailVerified: userCredential.user.emailVerified
+        })
           .then(() => {
             this.router.navigate(['/home']);
+          })
+          .catch(function(error) {
+            console.error("Error creating the profile: ", error);
           });
       })
       .catch(error => {
@@ -94,12 +105,8 @@ export class AuthService {
    * provider in Firestore database using AngularFirestore + AngularFirestoreDocument service
    */
   private insertUserData(user: firebase.User): Promise<void> {
-    const userReference: AngularFirestoreDocument<User> = this.angularFirestore.doc(`users/${user.uid}`);
-    const userData: User = {
-      uid: user.uid,
-      email: user.email,
-      emailVerified: false
-    };
+    const userReference: AngularFirestoreDocument<Profile> = this.angularFirestore.doc(`users/${user.uid}`);
+    const userData = new Profile(user.uid, user.email, '','', '', false);
 
     return userReference.set(userData, {
       merge: true
@@ -152,9 +159,47 @@ export class AuthService {
       .catch((error) => {
         window.alert(error);
       }).then(() => {
-        this.user.next(null);
-        localStorage.removeItem('uid');
+        this.authenticatedUserId.next(null);
+        localStorage.removeItem('firebaseUserUID');
         this.router.navigate(['/home']);
+    });
+  }
+
+  /**
+   * Update details of the currently authenticated user.
+   * @param userDetailsForm
+   */
+  updateUserDetails() {
+    // const userDetails = Object.assign({}, userDetailsForm.value);
+    // const user = this.angularFireAuth.auth.currentUser;
+
+    this.angularFireAuth.auth.onAuthStateChanged(function(user) {
+      if (user) {
+        user.updateProfile({
+          displayName: 'vladinooo',
+          photoURL: 'http://test.com/photo'
+        }).then(function() {
+          console.log('User details updated');
+        }).catch(function(error) {
+          console.log('Failed to update user details: ' + error);
+        });
+      } else {
+        // No user is signed in.
+      }
+    });
+
+
+  }
+
+  /**
+   * Delete user.
+   */
+  deleteUser() {
+    const user = this.angularFireAuth.auth.currentUser;
+    user.delete().then(function() {
+      console.log('User deleted successfully');
+    }).catch(function(error) {
+      console.log('User deletion failed: ' + error);
     });
   }
 

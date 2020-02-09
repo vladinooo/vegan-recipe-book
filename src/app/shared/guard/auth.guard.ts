@@ -17,9 +17,9 @@ export class AuthGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
 
-    return this.authService.user$.pipe(
+    return this.authService.authenticatedUserId$.pipe(
       take(1),
-      map(user => !!user), // <-- map to boolean
+      map(authenticatedUserId => !!authenticatedUserId), // <-- map to boolean
       tap(isAuthenticated => {
         if (!isAuthenticated) {
           console.log('access denied')

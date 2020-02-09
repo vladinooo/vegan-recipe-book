@@ -12,9 +12,9 @@ import {ContactComponent} from "../../contact/contact.component";
 import {CreateRecipeComponent} from "../../recipe/create-recipe/create-recipe.component";
 import {ViewRecipeComponent} from "../../recipe/view-recipe/view-recipe.component";
 import {EditRecipeComponent} from "../../recipe/edit-recipe/edit-recipe.component";
-import {UsersComponent} from "../../user/users/users.component";
-import {ViewUserComponent} from "../../user/view-user/view-user.component";
-import {EditUserComponent} from "../../user/edit-user/edit-user.component";
+import {ProfilesComponent} from "../../profile/profiles/profiles.component";
+import {ViewProfileComponent} from "../../profile/view-profile/view-profile.component";
+import {EditProfileComponent} from "../../profile/edit-profile/edit-profile.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -29,9 +29,9 @@ const routes: Routes = [
   { path: 'join', component: JoinComponent},
   { path: 'forgot-password', component: ForgotPasswordComponent},
   { path: 'verify-email-address', component: VerifyEmailComponent},
-  { path: 'users', component: UsersComponent, canActivate: [AuthGuard]},
-  { path: 'users/:id', component: ViewUserComponent},
-  { path: 'users/edit/:id', component: EditUserComponent, canActivate: [AuthGuard]},
+  { path: 'profiles', component: ProfilesComponent, canActivate: [AuthGuard]},
+  { path: 'profiles/:id', component: ViewProfileComponent, canActivate: [AuthGuard]},
+  { path: 'profiles/edit/:id', component: EditProfileComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

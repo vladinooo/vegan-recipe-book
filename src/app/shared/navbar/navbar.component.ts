@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {User} from "../../user/User";
 import {AuthService} from "../services/auth.service";
-import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-navbar',
@@ -10,13 +8,13 @@ import {Subscription} from "rxjs";
 })
 export class NavbarComponent implements OnInit {
 
-  user: User;
+  authenticatedUserId: string;
 
   constructor(public authService: AuthService) { }
 
   ngOnInit() {
-    this.authService.user$.subscribe(user => {
-      this.user = user;
+    this.authService.authenticatedUserId$.subscribe(uid => {
+      this.authenticatedUserId = uid;
     });
   }
 

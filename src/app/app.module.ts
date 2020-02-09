@@ -23,9 +23,10 @@ import { FooterComponent } from './shared/footer/footer.component';
 import {AngularFontAwesomeModule} from "angular-font-awesome";
 import {AuthGuard} from "./shared/guard/auth.guard";
 import {FormsModule} from "@angular/forms";
-import { EditUserComponent } from './user/edit-user/edit-user.component';
-import { ViewUserComponent } from './user/view-user/view-user.component';
-import { UsersComponent } from './user/users/users.component';
+import { ViewProfileComponent } from './profile/view-profile/view-profile.component';
+import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
+import { ProfilesComponent } from './profile/profiles/profiles.component';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -43,9 +44,10 @@ import { UsersComponent } from './user/users/users.component';
     VerifyEmailComponent,
     NavbarComponent,
     FooterComponent,
-    EditUserComponent,
-    ViewUserComponent,
-    UsersComponent
+    ViewProfileComponent,
+    EditProfileComponent,
+    ProfilesComponent,
+    LoadingSpinnerComponent
 
   ],
   imports: [

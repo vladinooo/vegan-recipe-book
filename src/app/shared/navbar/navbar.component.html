@@ -11,7 +11,7 @@
           <a class="nav-link" routerLink="/home" [routerLinkActive]="['active']">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/about" [routerLinkActive]="['active']">About</a>
+          <a class="nav-link" (click)="authService.updateUserDetails()" [routerLinkActive]="['active']">About</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/recipes" [routerLinkActive]="['active']">Recipes</a>
@@ -19,18 +19,18 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/contact" [routerLinkActive]="['active']">Contact</a>
         </li>
-        <li class="nav-item dropdown" *ngIf="user">
+        <li class="nav-item dropdown" *ngIf="authenticatedUserId != null">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-user-circle" style="font-size: x-large"></i>
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" routerLink="/profiles/{{authenticatedUserId}}">Profile</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" (click)="authService.logout()">Log Out</a>
           </div>
         </li>
-        <li class="nav-item" *ngIf="!user">
+        <li class="nav-item" *ngIf="authenticatedUserId == null">
           <button class="btn btn-outline-light" type="button" routerLink="/login">Login / Join</button>
         </li>
       </ul>

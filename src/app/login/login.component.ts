@@ -8,9 +8,14 @@ import {AuthService} from "../shared/services/auth.service";
 })
 export class LoginComponent implements OnInit {
 
+  error: any;
+
   constructor(public authService: AuthService) { }
 
   ngOnInit() {
+    this.authService.eventAuthError$.subscribe(data => {
+      this.error = data;
+    });
   }
 
 }
