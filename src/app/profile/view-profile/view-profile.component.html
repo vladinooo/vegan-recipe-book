@@ -1,20 +1,14 @@
 <!-- Navigation -->
 <app-navbar></app-navbar>
 
-<div class="container pt-5">
+<div class="container p-5 b-5">
   <div class="row">
-    <div class="col-md-12, col-lg-3">
-      <img src="assets/images/dummy-user.png" alt="..." class="img-thumbnail">
-    </div>
-    <div class="col-md-12, col-lg-9">
+    <div class="col-md-12">
       <div class="card text-center">
         <div class="card-header">
           <ul class="nav nav-tabs card-header-tabs">
             <li class="nav-item">
               <a class="nav-link active" href="" data-target="#user" data-toggle="tab"  aria-expanded="false">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="" data-target="#recipes" data-toggle="tab" aria-expanded="false">Recipes</a>
             </li>
           </ul>
         </div>
@@ -23,18 +17,19 @@
             <div class="tab-pane active" id="user" aria-expanded="false">
               <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
               <div style="text-align: left" *ngIf="profile$ | async as profile">
-                <p>Email: {{profile.email}}</p>
-                <p>Name: {{profile.name}}</p>
-                <p>Photo URL: {{profile.photoURL}}</p>
-                <p>Bio: {{profile.bio}}</p>
-                <p *ngIf="profile.emailVerified === true">Verified: Yes</p>
-                <p *ngIf="profile.emailVerified !== true">Verified: No</p>
+                <div class="row">
+                  <div class="col-md-12, col-lg-3">
+                    <img src="assets/images/dummy-user.png" alt="..." class="img-thumbnail profile-thumbnail">
+                  </div>
+                  <div class="col-md-12, col-lg-9">
+                    <p>Name: {{profile.name}}</p>
+                    <p>Bio: {{profile.bio}}</p>
+                    <p>Email: {{profile.email}}</p>
+                    <p *ngIf="profile.emailVerified === true">Verified: Yes</p>
+                    <p *ngIf="profile.emailVerified !== true">Verified: No</p>
+                  </div>
+                </div>
               </div>
-
-            </div>
-            <div class="tab-pane" id="recipes" aria-expanded="false">
-              <h4>Recipes</h4>
-
             </div>
           </div>
         </div>
@@ -42,6 +37,134 @@
     </div>
   </div>
 </div>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">Settings</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" [routerLinkActive]="['active']">
+            <a [routerLink]="['.']"  fragment="profile" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="true">
+              <i class="fa fa-fw fa-btn fa-edit"></i>Profile
+            </a>
+          </li>
+          <li class="list-group-item" [routerLinkActive]="['active']">
+            <a [routerLink]="['.']" fragment="security" aria-controls="security" role="tab" data-toggle="tab" aria-expanded="true">
+              <i class="fa fa-fw fa-btn fa-lock"></i>
+              Security
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="tab-content">
+        <div id="profile" class="tab-pane active">
+          <div>
+            <div>
+              <div class="card">
+                <div class="card-header">Profile Photo</div>
+                <div class="card-body">
+                  <form role="form" class="form-horizontal">
+                    <div class="form-group"><label class="col-md-4 control-label">&nbsp;</label>
+                      <div class="col-md-6"><span role="img"
+                                                  style="background-image: url('assets/images/dummy-user.png');"></span>
+                      </div>
+                    </div>
+                    <div class="form-group"><label class="col-md-4 control-label">&nbsp;</label>
+                      <div class="col-md-6"><label type="button" class="btn btn-primary btn-upload"><span>Select New Photo</span>
+                        <input type="file" name="photo" class="form-control"></label></div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">Contact Information</div>
+              <div class="card-body">
+                <form role="form" class="form-horizontal">
+                  <div class="form-group"><label class="col-md-4 control-label">Name</label>
+                    <div class="col-md-6"><input type="text" name="name" class="form-control">
+                      <span class="help-block" style="display: none;"></span>
+                    </div>
+                  </div>
+                  <div class="form-group"><label class="col-md-4 control-label">E-Mail Address</label>
+                    <div class="col-md-6"><input type="email" name="email" class="form-control">
+                      <span class="help-block" style="display: none;"></span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-offset-4 col-md-6">
+                      <button type="submit" class="btn btn-primary">
+                        Update
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">Bio</div>
+              <div class="card-body">
+                <form role="form" class="form-horizontal">
+                  <div class="form-group"><label class="col-md-4 control-label">Name</label>
+                    <div class="col-md-6"><input type="text" name="name" class="form-control">
+                      <span class="help-block" style="display: none;"></span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-offset-4 col-md-6">
+                      <button type="submit" class="btn btn-primary">
+                        Update
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="security" class="tab-pane">
+          <div>
+            <div class="card">
+              <div class="card-header">Update Password</div>
+              <div class="card-body"><!---->
+                <form role="form" class="form-horizontal">
+                  <div class="form-group"><label class="col-md-4 control-label">Current Password</label>
+                    <div class="col-md-6"><input type="password" name="current_password" class="form-control">
+                      <span class="help-block" style="display: none;"></span>
+                    </div>
+                  </div>
+                  <div class="form-group"><label class="col-md-4 control-label">Password</label>
+                    <div class="col-md-6"><input type="password" name="password" class="form-control">
+                      <span class="help-block" style="display: none;"></span>
+                    </div>
+                  </div>
+                  <div class="form-group"><label class="col-md-4 control-label">Confirm Password</label>
+                    <div class="col-md-6"><input type="password" name="password_confirmation" class="form-control">
+                      <span class="help-block" style="display: none;"></span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-offset-4 col-md-6">
+                      <button type="submit" class="btn btn-primary">
+                        Update
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 

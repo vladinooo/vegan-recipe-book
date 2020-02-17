@@ -13,8 +13,9 @@ import {CreateRecipeComponent} from "../../recipe/create-recipe/create-recipe.co
 import {ViewRecipeComponent} from "../../recipe/view-recipe/view-recipe.component";
 import {EditRecipeComponent} from "../../recipe/edit-recipe/edit-recipe.component";
 import {ProfilesComponent} from "../../profile/profiles/profiles.component";
-import {ViewProfileComponent} from "../../profile/view-profile/view-profile.component";
-import {EditProfileComponent} from "../../profile/edit-profile/edit-profile.component";
+import {ProfileComponent} from "../../settings/profile/profile.component";
+import {SettingsComponent} from "../../settings/settings.component";
+import {SecurityComponent} from "../../settings/security/security.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -30,8 +31,11 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent},
   { path: 'verify-email-address', component: VerifyEmailComponent},
   { path: 'profiles', component: ProfilesComponent, canActivate: [AuthGuard]},
-  { path: 'profiles/:id', component: ViewProfileComponent, canActivate: [AuthGuard]},
-  { path: 'profiles/edit/:id', component: EditProfileComponent, canActivate: [AuthGuard]},
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], children: [
+      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+      { path: 'security', component: SecurityComponent, canActivate: [AuthGuard]},
+    ]},
+  { path: 'settings/:id/security', component: ProfileComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

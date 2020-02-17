@@ -23,10 +23,13 @@ import { FooterComponent } from './shared/footer/footer.component';
 import {AngularFontAwesomeModule} from "angular-font-awesome";
 import {AuthGuard} from "./shared/guard/auth.guard";
 import {FormsModule} from "@angular/forms";
-import { ViewProfileComponent } from './profile/view-profile/view-profile.component';
-import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { ProfilesComponent } from './profile/profiles/profiles.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { ProfileComponent } from './settings/profile/profile.component';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import { SettingsComponent } from './settings/settings.component';
+import { SecurityComponent } from './settings/security/security.component';
+import {AngularFireStorageModule} from "@angular/fire/storage";
 
 @NgModule({
   declarations: [
@@ -44,11 +47,11 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
     VerifyEmailComponent,
     NavbarComponent,
     FooterComponent,
-    ViewProfileComponent,
-    EditProfileComponent,
     ProfilesComponent,
-    LoadingSpinnerComponent
-
+    LoadingSpinnerComponent,
+    ProfileComponent,
+    SettingsComponent,
+    SecurityComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +61,9 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
     AngularFirestoreModule,
     AppRoutingModule,
     AngularFontAwesomeModule,
-    FormsModule
+    FormsModule,
+    NgbModule,
+    AngularFireStorageModule
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]

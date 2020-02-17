@@ -6,7 +6,6 @@ import {Router} from "@angular/router";
 import {BehaviorSubject} from "rxjs";
 import {auth} from 'firebase/app';
 import * as firebase from "firebase";
-import {NgForm} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +18,10 @@ export class AuthService {
 
   private eventAuthError = new BehaviorSubject<string>('');
   eventAuthError$ = this.eventAuthError.asObservable();
+
+  private defaultPhotoURL = 'https://firebasestorage.googleapis.com' +
+    '/v0/b/vegan-recipe-book.appspot.com/o/1581979955149_dummy-user.png' +
+    '?alt=media&token=6b8e98d9-b1d4-49a7-a847-b733fcdadbfa';
 
   constructor(
     public angularFirestore: AngularFirestore,   // Inject Firestore service
@@ -83,7 +86,7 @@ export class AuthService {
           uid: userCredential.user.uid,
           email: userCredential.user.email,
           name: '',
-          photoURL: '',
+          photoURL: this.defaultPhotoURL,
           bio: '',
           emailVerified: userCredential.user.emailVerified
         })

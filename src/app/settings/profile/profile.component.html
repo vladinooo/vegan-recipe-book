@@ -1,0 +1,73 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<div *ngIf="profile$ | async as profile">
+  <div class="card my-4">
+    <div class="card-header">Profile Photo</div>
+    <div class="card-body">
+      <form role="form" class="form-horizontal">
+        <div class="form-group">
+          <div class="col-md-12 text-center">
+            <img src="{{profile.photoURL}}" alt="Profile Photo" class="img-thumbnail profile-photo">
+            <br />
+            <label type="button" class="btn btn-primary btn-upload">
+              <span>Select New Photo</span>
+              <input type="file" name="photo" class="form-control"
+                     (change)="uploadProfilePhoto($event.target.files, profile)">
+            </label>
+
+            <div *ngIf="uploadService.percentage | async as pct">
+              <progress [value]="pct" max="100"></progress>
+              <p>{{ pct | number }}%</p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="card my-4">
+    <div class="card-header">Contact Information</div>
+    <div class="card-body">
+      <form role="form" class="form-horizontal">
+        <div class="form-group"><label class="col-md-4 control-label">Name</label>
+          <div class="col-md-6">
+            <input type="text" name="name" value="{{profile.name}}" class="form-control">
+            <span class="help-block" style="display: none;"></span>
+          </div>
+        </div>
+        <div class="form-group"><label class="col-md-4 control-label">E-Mail Address</label>
+          <div class="col-md-6">
+            <input type="email" name="email" value="{{profile.email}}" class="form-control">
+            <span class="help-block" style="display: none;"></span>
+            <p *ngIf="profile.emailVerified === true" class="text-success">Verified</p>
+            <p *ngIf="profile.emailVerified !== true" class="text-danger">Unverified</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-md-offset-4 col-md-6">
+            <button type="submit" class="btn btn-primary">
+              Update
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="card my-4">
+    <div class="card-header">Bio</div>
+    <div class="card-body">
+      <form role="form" class="form-horizontal">
+        <div class="form-group"><label class="col-md-4 control-label">Name</label>
+          <div class="col-md-6"><input type="text" name="name" class="form-control">
+            <span class="help-block" style="display: none;"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-md-offset-4 col-md-6">
+            <button type="submit" class="btn btn-primary">
+              Update
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
